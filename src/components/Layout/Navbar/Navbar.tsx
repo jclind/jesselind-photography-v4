@@ -9,15 +9,42 @@ interface NavbarProps {
 
 const Navbar = ({ currentPath }: NavbarProps) => {
   const [isOpen, setIsOpen] = useState(false)
+
+  const toggleIsOpen = () => setIsOpen(state => !state)
   console.log(currentPath)
+
+  const links = [
+    { name: 'Home', src: '/home' },
+    { name: 'Projects', src: '/projects' },
+    { name: 'Contact', src: '/contact' },
+    { name: 'Info', src: '/info' },
+    {
+      name: 'jesselind.com',
+      src: 'https://jesselind.com/',
+      shouldOpenInNewTab: true,
+    },
+  ]
   return (
-    <div className={styles.navbar}>
-      <button className={styles.hamburger}>
+    <>
+      <div className={`${styles.navbar} ${isOpen && styles.nav_open}`}>
+        <div className={styles.links}>
+          {links.map(link => (
+            <a
+              href={link.src}
+              target={link.shouldOpenInNewTab ? '_blank' : '_self'}
+              rel={link.shouldOpenInNewTab ? 'noopener noreferrer' : undefined}
+            >
+              {link.name}
+            </a>
+          ))}
+        </div>
+      </div>
+      <button className={styles.hamburger} onClick={toggleIsOpen}>
         <span className={`${styles.top}`}></span>
         <span className={`${styles.middle}`}></span>
         <span className={`${styles.bottom}`}></span>
       </button>
-    </div>
+    </>
   )
 }
 
