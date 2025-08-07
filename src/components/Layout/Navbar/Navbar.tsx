@@ -26,6 +26,17 @@ const Navbar = ({ currentPath }: NavbarProps) => {
   ]
   return (
     <>
+      <button className={styles.hamburger} onClick={toggleIsOpen} tabIndex={0}>
+        <span
+          className={`${styles.top} ${isOpen ? styles.top_open : ''}`}
+        ></span>
+        <span
+          className={`${styles.middle} ${isOpen ? styles.middle_open : ''}`}
+        ></span>
+        <span
+          className={`${styles.bottom} ${isOpen ? styles.bottom_open : ''}`}
+        ></span>
+      </button>
       <div className={`${styles.navbar} ${isOpen && styles.nav_open}`}>
         <div className={styles.links}>
           {links.map(link => (
@@ -39,11 +50,6 @@ const Navbar = ({ currentPath }: NavbarProps) => {
           ))}
         </div>
       </div>
-      <button className={styles.hamburger} onClick={toggleIsOpen}>
-        <span className={`${styles.top}`}></span>
-        <span className={`${styles.middle}`}></span>
-        <span className={`${styles.bottom}`}></span>
-      </button>
     </>
   )
 }

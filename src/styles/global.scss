@@ -11,6 +11,11 @@
   font-family: $font-family-base;
 }
 
+*:focus-visible {
+  outline: 1px solid $primary-text;
+  outline-offset: 2px;
+}
+
 html {
   font-size: $font-size-base;
   -webkit-text-size-adjust: 100%;
@@ -71,10 +76,9 @@ button,
   }
 }
 
-:focus {
-  outline: 2px solid $primary-text;
-  outline-offset: 2px;
-}
+// :focus {
+
+// }
 
 // Page
 .page {
