@@ -12,27 +12,11 @@ const Navbar = ({ currentPath }: NavbarProps) => {
   console.log(currentPath)
   return (
     <div className={styles.navbar}>
-      <div className={styles.inner}>
-        <a href='/' className={styles.logo}>
-          <img src='/images/logo.webp' alt='Deer Lakes Web Designs' />
-        </a>
-        <div className={styles.hamburger}>
-          <Hamburger toggled={isOpen} toggle={setIsOpen} label='Menu' />
-        </div>
-        <nav className={`${styles.links} ${isOpen ? styles.open : ''}`}>
-          {navLinks.map(link => (
-            <a
-              key={link.path}
-              href={link.path}
-              className={`${styles.link} ${
-                currentPath === link.path ? styles.active : ''
-              }`}
-            >
-              {link.title}
-            </a>
-          ))}
-        </nav>
-      </div>
+      <button className={styles.hamburger}>
+        <span className={`${styles.top}`}></span>
+        <span className={`${styles.middle}`}></span>
+        <span className={`${styles.bottom}`}></span>
+      </button>
     </div>
   )
 }

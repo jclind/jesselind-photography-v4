@@ -1,8 +1,8 @@
 // =============================================
 // Colors
 // =============================================
-$primary-text: #212a33; // Primary text color
-$secondary-text: #444444; // Secondary text color
+$primary-text: #1a1a1a; // Primary text color
+$secondary-text: #666666; // Secondary text color
 $secondary-header: #484f56; // Secondary header color
 $primary-background: #ffffff; // Primary background color
 $secondary-background: #eaeaea; // Secondary background color
@@ -22,6 +22,8 @@ $line-height-base: 1.5; // Base line height
 $max-width-paragraph: 600px; // Max width for paragraphs
 
 // Font sizes
+$fs-xxs: 12px;
+$fs-xs: 13px;
 $fs-small: 14px; // Small font size
 $fs-regular: 16px; // Regular font size
 $fs-medium: 20px; // Medium font size
@@ -41,7 +43,7 @@ $spacing-large: $spacing-unit * 3; // Large spacing
 // =============================================
 // Gaps
 // =============================================
-$gap-tiny: 8px; // Tiny gap
+$gap-xs: 8px; // Tiny gap
 $gap-small: 12px; // Small gap
 $gap-regular: 16px; // Regular gap
 $gap-medium: 24px; // Medium gap
@@ -92,3 +94,5 @@ $fs-card-text: $fs-small; // Card text font size
 // Icons
 // =============================================
 $icon-stroke-width: 0.3; // Icon stroke width
+
+$page-gap: 24px;
