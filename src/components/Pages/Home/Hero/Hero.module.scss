@@ -1,14 +1,144 @@
 @use '../../../../styles/vars' as *;
 
+:root {
+  --horizontal-padding: 100px; // default
+}
+
+@media (max-width: $breakpoint-md) {
+  :root {
+    --horizontal-padding: 20px;
+  }
+}
+@media (max-width: $breakpoint-sm) {
+  :root {
+    --horizontal-padding: 10px;
+  }
+}
+
 .hero {
+  padding: 0 var(--horizontal-padding);
+  padding-top: 80px;
+
+  height: fit-content;
   .content {
-    display: flex;
-    flex-direction: column;
+    --container-width: calc(100vw - var(--horizontal-padding) * 2);
+
+    position: relative;
     gap: $gap-large;
-    .buttons {
-      display: flex;
-      gap: $gap-large;
-      margin: 0 auto;
+    width: 100%;
+    height: 1800px;
+
+    img {
+      position: absolute;
+      object-fit: contain;
+    }
+
+    --width-4th: calc(var(--container-width) * 4 / 12);
+    --width-5th: calc(var(--container-width) * 5 / 12);
+    --width-6th: calc(var(--container-width) * 6 / 12);
+    --width-7th: calc(var(--container-width) * 7 / 12);
+
+    --r-landscape: 0.6667; // 3/2
+    --r-portrait: 1.5; // 2/3
+
+    --t1: 0px;
+    --w1: var(--width-7th);
+    --h1: calc(var(--w1) * var(--r-landscape));
+
+    --t2: calc(var(--h1) / 2);
+    --w2: var(--width-4th);
+    --h2: calc(var(--w2) * var(--r-portrait));
+
+    --t3: calc(var(--h1) * 1.2);
+    --w3: var(--width-5th);
+    --h3: calc(var(--w3) * var(--r-landscape));
+
+    --t4: calc(var(--t3) + var(--h3) * 1.2);
+    --w4: var(--width-7th);
+    --h4: calc(var(--w4) * var(--r-landscape));
+
+    --t5: calc(var(--t4) + var(--h4) * 1.2);
+    --w5: var(--width-4th);
+    --h5: calc(var(--w5) * var(--r-portrait));
+
+    --t6: var(--t5);
+    --w6: var(--width-7th);
+    --h6: calc(var(--w6) * var(--r-landscape));
+
+    --t7: calc(var(--t6) + var(--h6) * 1.2);
+    --w7: var(--width-5th);
+    --h7: calc(var(--w7) * var(--r-landscape));
+
+    --t8: calc(var(--t7) + var(--h7) * 1.2);
+    --w8: var(--width-5th);
+    --h8: calc(var(--w8) * var(--r-landscape));
+
+    --t9: calc(var(--t8) + var(--h8) * 1.2);
+    --w9: var(--width-7th);
+    --h9: calc(var(--w9) * var(--r-landscape));
+
+    .logo {
+      position: absolute;
+      top: calc(var(--h1) / 4);
+      right: calc(var(--width-4th) / 2);
+      transform: translate(50%, -50%);
+      width: 100px;
+    }
+
+    .img_1 {
+      width: var(--w1);
+      height: var(--h1); // Added explicit height
+      top: var(--t1);
+      left: 0;
+    }
+    .img_2 {
+      width: var(--w2);
+      height: var(--h2); // Added explicit height
+      top: var(--t2);
+      right: 0; // Changed to right alignment for variety
+    }
+    .img_3 {
+      width: var(--w3);
+      height: var(--h3); // Added explicit height
+      top: var(--t3);
+      left: 1 / 12 * 100%;
+    }
+    .img_4 {
+      width: var(--w4);
+      height: var(--h4); // Added explicit height
+      top: var(--t4);
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    .img_5 {
+      width: var(--w5);
+      height: var(--h5); // Added explicit height
+      top: var(--t5);
+      left: 0;
+    }
+    .img_6 {
+      width: var(--w6);
+      height: var(--h6); // Added explicit height
+      top: var(--t6);
+      right: 0;
+    }
+    .img_7 {
+      width: var(--w7);
+      height: var(--h7); // Added explicit height
+      top: var(--t7);
+      left: var(--width-5th);
+    }
+    .img_8 {
+      width: var(--w8);
+      height: var(--h8); // Added explicit height
+      top: var(--t8);
+      left: 1 / 12 * 100%;
+    }
+    .img_9 {
+      width: var(--w9);
+      height: var(--h9); // Added explicit height
+      top: var(--t9);
+      left: var(--width-5th);
     }
   }
 }

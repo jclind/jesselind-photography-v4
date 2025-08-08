@@ -3,19 +3,22 @@ import styles from './Hero.module.scss'
 import { ButtonLink } from '../../../Common/ButtonLink'
 const Hero = () => {
   return (
-    <div className={`${styles.hero} page__horizontal-spacing-3xl`}>
-      <div className='page__inner'>
-        <div className={styles.content}>
-          <h1 className='page-title'>This Is The Hero</h1>
-          <p className='section-paragraph'>
-            This is the description for the hero Lorem ipsum dolor sit amet
-            consectetur adipisicing elit. Illo, commodi.
-          </p>
-          <div className={styles.buttons}>
-            <ButtonLink text='Get Started' link='/contact' color='primary' />
-            <ButtonLink text='About Us' link='/about' color='secondary' />
-          </div>
-        </div>
+    <div className={`${styles.hero}`}>
+      <div className={styles.content}>
+        <img
+          src='/images/logo.webp'
+          alt='Jesse Lind Photography Logo'
+          className={styles.logo}
+        />
+        <img src='/images/home/1.webp' alt='' className={styles.img_1} />
+        <img src='/images/home/2.webp' alt='' className={styles.img_2} />
+        <img src='/images/home/3.webp' alt='' className={styles.img_3} />
+        <img src='/images/home/4.webp' alt='' className={styles.img_4} />
+        <img src='/images/home/5.webp' alt='' className={styles.img_5} />
+        <img src='/images/home/6.webp' alt='' className={styles.img_6} />
+        <img src='/images/home/7.webp' alt='' className={styles.img_7} />
+        <img src='/images/home/8.webp' alt='' className={styles.img_8} />
+        <img src='/images/home/9.webp' alt='' className={styles.img_9} />
       </div>
     </div>
   )
