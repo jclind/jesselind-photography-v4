@@ -44,6 +44,11 @@ li {
   width: 100%;
 }
 
+h1 {
+  font-weight: 300;
+  font-size: $fs-medium;
+}
+
 a {
   color: $primary-text;
   text-decoration: none;

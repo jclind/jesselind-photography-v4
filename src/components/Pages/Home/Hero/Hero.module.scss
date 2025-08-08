@@ -19,17 +19,14 @@
 }
 
 .hero {
-  padding: 0 var(--horizontal-padding);
-  padding-top: var(--vertical-padding);
+  padding: var(--vertical-padding) var(--horizontal-padding);
 
-  height: fit-content;
   .content {
     --container-width: calc(100vw - var(--horizontal-padding) * 2);
 
     position: relative;
     gap: $gap-large;
     width: 100%;
-    height: 1800px;
 
     img {
       position: absolute;
@@ -70,7 +67,7 @@
     --r-landscape: 0.6667; // 3/2
     --r-portrait: 1.5; // 2/3
 
-    --gap-multiplier: 1.2;
+    --gap-multiplier: 1.3;
 
     --t1: 0px;
     --w1: var(--width-7th);
@@ -107,6 +104,9 @@
     --t9: calc(var(--t8) + var(--h8) * var(--gap-multiplier));
     --w9: var(--width-7th);
     --h9: calc(var(--w9) * var(--r-landscape));
+
+    --content-height: calc(var(--t9) + var(--h9))
+    height: var(--content-height);
 
     @media (max-width: $breakpoint-sm) {
       --w1: var(--width-11th);
