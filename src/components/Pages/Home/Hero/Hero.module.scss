@@ -2,22 +2,25 @@
 
 :root {
   --horizontal-padding: 100px; // default
+  --vertical-padding: 80px;
 }
 
 @media (max-width: $breakpoint-md) {
   :root {
     --horizontal-padding: 20px;
+    --vertical-padding: 80px;
   }
 }
 @media (max-width: $breakpoint-sm) {
   :root {
-    --horizontal-padding: 10px;
+    --horizontal-padding: 4px;
+    --vertical-padding: 80px;
   }
 }
 
 .hero {
   padding: 0 var(--horizontal-padding);
-  padding-top: 80px;
+  padding-top: var(--vertical-padding);
 
   height: fit-content;
   .content {
@@ -37,9 +40,14 @@
     --width-5th: calc(var(--container-width) * 5 / 12);
     --width-6th: calc(var(--container-width) * 6 / 12);
     --width-7th: calc(var(--container-width) * 7 / 12);
+    --width-7half: calc(var(--container-width) * 7.5 / 12);
+    --width-10th: calc(var(--container-width) * 10 / 12);
+    --width-11th: calc(var(--container-width) * 11 / 12);
 
     --r-landscape: 0.6667; // 3/2
     --r-portrait: 1.5; // 2/3
+
+    --gap-multiplier: 1.2;
 
     --t1: 0px;
     --w1: var(--width-7th);
@@ -49,15 +57,15 @@
     --w2: var(--width-4th);
     --h2: calc(var(--w2) * var(--r-portrait));
 
-    --t3: calc(var(--h1) * 1.2);
+    --t3: calc(var(--h1) * var(--gap-multiplier));
     --w3: var(--width-5th);
     --h3: calc(var(--w3) * var(--r-landscape));
 
-    --t4: calc(var(--t3) + var(--h3) * 1.2);
+    --t4: calc(var(--t3) + var(--h3) * var(--gap-multiplier));
     --w4: var(--width-7th);
     --h4: calc(var(--w4) * var(--r-landscape));
 
-    --t5: calc(var(--t4) + var(--h4) * 1.2);
+    --t5: calc(var(--t4) + var(--h4) * var(--gap-multiplier));
     --w5: var(--width-4th);
     --h5: calc(var(--w5) * var(--r-portrait));
 
@@ -65,21 +73,29 @@
     --w6: var(--width-7th);
     --h6: calc(var(--w6) * var(--r-landscape));
 
-    --t7: calc(var(--t6) + var(--h6) * 1.2);
+    --t7: calc(var(--t6) + var(--h6) * var(--gap-multiplier));
     --w7: var(--width-5th);
     --h7: calc(var(--w7) * var(--r-landscape));
 
-    --t8: calc(var(--t7) + var(--h7) * 1.2);
+    --t8: calc(var(--t7) + var(--h7) * var(--gap-multiplier));
     --w8: var(--width-5th);
     --h8: calc(var(--w8) * var(--r-landscape));
 
-    --t9: calc(var(--t8) + var(--h8) * 1.2);
+    --t9: calc(var(--t8) + var(--h8) * var(--gap-multiplier));
     --w9: var(--width-7th);
     --h9: calc(var(--w9) * var(--r-landscape));
 
+    @media (max-width: $breakpoint-sm) {
+      --w1: var(--width-11th);
+      --gap-multiplier: 1.9;
+      --t2: calc(var(--h1) * 1.1);
+      --w3: var(--width-6th);
+      --w4: var(--width-10th);
+    }
+
     .logo {
       position: absolute;
-      top: calc(var(--h1) / 4);
+      top: calc(var(--t2) / 2);
       right: calc(var(--width-4th) / 2);
       transform: translate(50%, -50%);
       width: 100px;
@@ -139,6 +155,42 @@
       height: var(--h9); // Added explicit height
       top: var(--t9);
       left: var(--width-5th);
+    }
+    .displayed_img {
+      object-fit: cover; // Changed from contain to cover for zoom effect
+      overflow: hidden;
+
+      // Default zoomed-in state
+      transform: scale(1);
+      transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+
+      // Hover and focus effects
+      &:hover,
+      &:focus {
+        transform: scale(1.01);
+        // outline: none; // Remove default focus outline since we have the scale effect
+      }
+    }
+
+    @media (max-width: $breakpoint-sm) {
+      // display: flex;
+      // flex-direction: column;
+      // gap: $gap-medium;
+      img {
+        // position: relative;
+        // width: 100%;
+      }
+      .logo {
+        position: fixed;
+        // top: calc(var(--t2) + (var(--h2) / 2));
+        // left: 4 / 12 * 100%;
+        top: 24px;
+        left: 24px;
+        width: 60px;
+        transform: translate(0, 0);
+        z-index: 12;
+        // transform: translate(-50%, -50%);
+      }
     }
   }
 }

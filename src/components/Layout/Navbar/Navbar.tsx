@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import styles from './Navbar.module.scss'
 import { navLinks } from './navData'
 import { Twirl as Hamburger } from 'hamburger-react'
@@ -11,7 +11,19 @@ const Navbar = ({ currentPath }: NavbarProps) => {
   const [isOpen, setIsOpen] = useState(false)
 
   const toggleIsOpen = () => setIsOpen(state => !state)
-  console.log(currentPath)
+
+  // Lock/unlock body scroll when menu is open
+  useEffect(() => {
+    if (isOpen) {
+      document.body.style.overflow = 'hidden'
+      document.body.style.position = 'fixed' // helps on iOS to stop bounce
+      document.body.style.width = '100%' // prevents layout shift
+    } else {
+      document.body.style.overflow = ''
+      document.body.style.position = ''
+      document.body.style.width = ''
+    }
+  }, [isOpen])
 
   const links = [
     { name: 'Home', src: '/home' },
