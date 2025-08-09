@@ -1,0 +1,98 @@
+@use '../../../../styles/vars' as *;
+
+.Hero {
+  min-height: 90vh;
+  .logo {
+    position: fixed;
+    top: 24px;
+    left: 24px;
+    width: 60px;
+    z-index: 12;
+    img {
+      object-fit: contain;
+      height: 100%;
+      width: 100%;
+    }
+  }
+
+  .content {
+    position: relative;
+    margin: 34px 150px;
+    height: 100%;
+
+    a {
+      font-size: $fs-large;
+      &:hover {
+        text-decoration: none;
+      }
+    }
+
+    $my-photos-link-height: 22.5px;
+    .my_photos_link {
+      margin-top: 15px;
+      height: $my-photos-link-height;
+    }
+
+    .links {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: $gap-small;
+      padding-top: $gap-2xl;
+      a {
+        height: 40px;
+        text-align: start;
+        vertical-align: top;
+        min-width: 40px;
+        // font-weight: 600;
+        // color: $secondary-text;
+        .image_container {
+          position: absolute;
+          height: 0;
+          width: 0;
+          overflow: hidden;
+          right: 0;
+          // top: $gap-2xl + $my-photos-link-height;
+          // transform: translateY(-50%);
+          transform: translateY(-25px);
+          img {
+            object-fit: contain;
+            height: 100%;
+            width: 100%;
+          }
+        }
+        .line {
+          position: absolute;
+          left: 0;
+          width: 100%;
+
+          transform: translateY(-35px);
+        }
+      }
+    }
+    a.hovered {
+      color: $primary-text;
+      font-weight: 300;
+      .image_container {
+        width: 50%;
+        height: fit-content;
+      }
+      .line {
+        height: 1px;
+        border-top: 1px dotted $border-color;
+      }
+    }
+    a.img_to_top {
+      .image_container {
+        transform: translateY(calc(-100% - 0px));
+      }
+      .line {
+        transform: translateY(5px);
+      }
+    }
+
+    a.not_hovered {
+      color: $tertiary-text;
+    }
+  }
+}

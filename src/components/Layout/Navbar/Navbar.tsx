@@ -27,7 +27,7 @@ const Navbar = ({ currentPath }: NavbarProps) => {
 
   const links = [
     { name: 'Home', src: '/home' },
-    { name: 'Projects', src: '/projects' },
+    { name: 'Collection', src: '/collection' },
     { name: 'Contact', src: '/contact' },
     { name: 'Info', src: '/info' },
     {
