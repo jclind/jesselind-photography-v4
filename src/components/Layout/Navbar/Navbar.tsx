@@ -28,8 +28,9 @@ const Navbar = ({ currentPath }: NavbarProps) => {
   const links = [
     { name: 'Home', src: '/home' },
     { name: 'Collection', src: '/collection' },
-    { name: 'Contact', src: '/contact' },
-    { name: 'Info', src: '/info' },
+    // { name: 'Contact', src: '/contact' },
+    // { name: 'Info', src: '/info' },
+    { name: 'About', src: '/about' },
     {
       name: 'jesselind.com',
       src: 'https://jesselind.com/',
