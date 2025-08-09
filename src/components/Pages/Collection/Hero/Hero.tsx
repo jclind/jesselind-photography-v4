@@ -84,7 +84,8 @@ const Hero = () => {
                 onMouseLeave={handleMouseLeave}
                 className={`${currClass} ${index > 3 ? styles.img_to_top : ''}`}
               >
-                {collection.name}
+                <span className={styles.left_numbers}>{`0${index + 1}`}</span>
+                <span className={styles.name}>{collection.name}</span>
                 <div className={styles.image_container}>
                   <img src={collection.imgSrc} />
                 </div>

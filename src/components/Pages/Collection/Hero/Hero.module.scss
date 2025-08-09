@@ -20,6 +20,16 @@
     margin: 34px 150px;
     height: 100%;
 
+    @media (max-width: $breakpoint-lg) {
+      margin-left: 0;
+      margin-right: 0;
+      padding-left: 40%;
+      padding-right: 24px;
+    }
+    @media (max-width: $breakpoint-sm) {
+      padding-right: 8px;
+    }
+
     a {
       font-size: $fs-large;
       &:hover {
@@ -44,6 +54,9 @@
         text-align: start;
         vertical-align: top;
         min-width: 40px;
+        .left_numbers {
+          display: none;
+        }
         // font-weight: 600;
         // color: $secondary-text;
         .image_container {
@@ -69,25 +82,64 @@
           transform: translateY(-35px);
         }
       }
-    }
-    a.hovered {
-      color: $primary-text;
-      font-weight: 300;
-      .image_container {
-        width: 50%;
-        height: fit-content;
+      @media (min-width: $breakpoint-lg) {
+        a.hovered {
+          color: $primary-text;
+          font-weight: 300;
+          .image_container {
+            width: 50%;
+            height: fit-content;
+          }
+          .line {
+            height: 1px;
+            border-top: 1px dotted $border-color;
+          }
+        }
+        a.img_to_top {
+          .image_container {
+            transform: translateY(calc(-100% - 0px));
+          }
+          .line {
+            transform: translateY(5px);
+          }
+        }
       }
-      .line {
-        height: 1px;
-        border-top: 1px dotted $border-color;
-      }
-    }
-    a.img_to_top {
-      .image_container {
-        transform: translateY(calc(-100% - 0px));
-      }
-      .line {
-        transform: translateY(5px);
+
+      @media (max-width: $breakpoint-lg) {
+        display: flex;
+        flex-direction: column;
+        a {
+          display: flex;
+          flex-direction: column;
+          align-items: flex-start;
+          height: fit-content;
+          gap: $gap-large;
+          .left_numbers {
+            display: flex;
+            align-items: flex-end;
+            position: absolute;
+            left: calc(24px);
+            font-size: $fs-xxs;
+            height: 17px;
+          }
+          .name {
+            border-bottom: 1px dotted $border-color;
+            font-size: $fs-regular;
+            height: 17px;
+          }
+          .image_container {
+            position: relative;
+            width: 100%;
+            height: fit-content;
+          }
+          .line {
+            // border-top: 1px dotted $border-color;
+          }
+        }
+        a.hovered {
+          color: $primary-text;
+          font-weight: 400;
+        }
       }
     }
 
