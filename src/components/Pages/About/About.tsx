@@ -9,7 +9,7 @@ const About = () => {
       link: 'mailto:jesselindphotography@gmail.com',
     },
     {
-      label: 'Instagram',
+      label: 'IG',
       value: '@jesselindphotography',
       link: 'https://www.instagram.com/jesselindphotography/',
     },

@@ -13,10 +13,21 @@
     }
     @media (max-width: $breakpoint-md) {
       // padding: 0 24px;
-      padding-left: 24px;
+      // padding-left: 24px;
+      padding-left: 35%;
+      padding-right: 24px;
+      overflow: hidden;
       padding-top: 130px;
       flex-direction: column;
       gap: $gap-xl;
+      p,
+      span,
+      .About {
+        font-size: $fs-3xs;
+      }
+    }
+    @media (max-width: 375px) {
+      padding-left: 20%;
     }
     div {
       display: flex;
@@ -29,7 +40,7 @@
         font-size: $fs-xxs;
         color: $secondary-text;
         font-weight: 300;
-        width: 250px;
+        max-width: 250px;
       }
     }
     .contact {
@@ -38,6 +49,7 @@
         display: flex;
         flex-direction: column;
         gap: $gap-regular;
+
         span,
         a {
           font-size: $fs-xxs;
@@ -47,9 +59,12 @@
         .contact_link {
           display: flex;
           flex-direction: row;
+          @media (max-width: 350px) {
+            gap: $gap-xs;
+          }
           .label {
             flex-shrink: 0;
-            width: 60px;
+            width: 50px;
             // background: red;
           }
         }
