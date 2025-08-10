@@ -7,6 +7,10 @@
     padding: 0 150px;
     padding-top: 150px;
 
+    a:hover {
+      color: $primary-text !important;
+    }
+
     @media (max-width: $breakpoint-lg) {
       padding: 0 80px;
       padding-top: 130px;
@@ -43,6 +47,13 @@
         max-width: 250px;
       }
     }
+    .information {
+      a {
+        text-decoration: underline;
+        font-weight: 300;
+        color: $secondary-text;
+      }
+    }
     .contact {
       max-width: 100%;
       .contact_links {
@@ -56,6 +67,7 @@
           font-weight: 300;
           color: $secondary-text;
         }
+
         .contact_link {
           display: flex;
           flex-direction: row;
