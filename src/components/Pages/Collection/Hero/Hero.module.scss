@@ -25,6 +25,9 @@
       margin-right: 0;
       padding-left: 40%;
       padding-right: 24px;
+      .my_photos_link {
+        font-size: $fs-regular;
+      }
     }
     @media (max-width: $breakpoint-sm) {
       padding-right: 8px;
