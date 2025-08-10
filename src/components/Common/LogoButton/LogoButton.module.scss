@@ -1,0 +1,11 @@
+@use '../../../styles/vars' as *;
+
+.nav_logo {
+  position: fixed;
+  top: 24px;
+  left: 24px;
+  img {
+    object-fit: contain;
+    width: 60px;
+  }
+}

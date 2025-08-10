@@ -1,5 +1,6 @@
 import React from 'react'
 import styles from './About.module.scss'
+import LogoButton from '../../Common/LogoButton'
 
 const About = () => {
   const contactLinks = [
@@ -23,7 +24,7 @@ const About = () => {
 
   return (
     <div className={styles.About}>
-      <img src='/images/logo.webp' className={styles.logo} />
+      <LogoButton />
       <div className={styles.content}>
         <div className={styles.information}>
           <h1>Information</h1>

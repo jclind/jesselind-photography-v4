@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import styles from './Hero.module.scss'
+import LogoButton from '../../../Common/LogoButton'
 
 const Hero = () => {
   const [currHoveredName, setCurrHoveredName] = useState<string | null>(null)
@@ -59,9 +60,7 @@ const Hero = () => {
 
   return (
     <div className={styles.Hero}>
-      <a href='/' className={styles.logo}>
-        <img src='/images/logo.webp' />
-      </a>
+      <LogoButton />
       <div className={styles.content}>
         <a href='' className={styles.my_photos_link}>
           My Photos
