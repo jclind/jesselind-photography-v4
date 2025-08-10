@@ -1,1 +1,54 @@
 @use '../../../styles/vars' as *;
+
+.About {
+  .content {
+    display: flex;
+    gap: $gap-2xl;
+    padding-left: 150px;
+    padding-top: 150px;
+    div {
+      display: flex;
+      flex-direction: column;
+      gap: $gap-medium;
+      h1 {
+        font-size: $fs-regular;
+      }
+      p {
+        font-size: $fs-xxs;
+        color: $secondary-text;
+        font-weight: 300;
+        width: 250px;
+      }
+    }
+    .contact {
+      .contact_links {
+        display: flex;
+        flex-direction: column;
+        gap: $gap-regular;
+        span,
+        a {
+          font-size: $fs-xxs;
+          font-weight: 300;
+          color: $secondary-text;
+        }
+        .contact_link {
+          display: flex;
+          flex-direction: row;
+          .label {
+            flex-shrink: 0;
+            width: 60px;
+            // background: red;
+          }
+        }
+      }
+    }
+  }
+
+  .logo {
+    position: absolute;
+    top: 24px;
+    left: 24px;
+    object-fit: contain;
+    width: 60px;
+  }
+}
