@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import imageCompression from 'browser-image-compression'
 import { db, storage } from '../../../../lib/firebase'
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'
@@ -13,71 +13,96 @@ import {
   categories,
   type CollectionType,
 } from '../../../../assets/data/categories'
+import { projects, type ProjectType } from '../../../../assets/data/projects'
 
 export default function AddPhoto() {
+  // Metadata inputs that apply to all files
   const [title, setTitle] = useState('')
   const [photoDate, setPhotoDate] = useState<string>('')
   const [location, setLocation] = useState('')
   const [category, setCategory] = useState('')
-  const [project, setProject] = useState('')
+  const [projectID, setProjectID] = useState('')
   const [description, setDescription] = useState('')
-  const [file, setFile] = useState<File | null>(null)
+
+  // Files & previews
+  const [files, setFiles] = useState<File[]>([])
+  const [previewUrls, setPreviewUrls] = useState<string[]>([])
+
   const [loading, setLoading] = useState(false)
+
+  // Generate previews when files change
+  useEffect(() => {
+    if (files.length === 0) {
+      setPreviewUrls([])
+      return
+    }
+
+    const urls = files.map(file => URL.createObjectURL(file))
+    setPreviewUrls(urls)
+
+    return () => urls.forEach(url => URL.revokeObjectURL(url))
+  }, [files])
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
-    if (!file) return alert('Please select a file.')
+    if (files.length === 0) return alert('Please select files.')
 
     setLoading(true)
     try {
-      const id = file.name
-        .replace(/\.[^/.]+$/, '')
-        .toLowerCase()
-        .replace(/\s+/g, '-')
+      for (const file of files) {
+        const id = file.name
+          .replace(/\.[^/.]+$/, '')
+          .toLowerCase()
+          .replace(/\s+/g, '-')
 
-      // Upload full-res
-      const fullRef = ref(storage, `full/${file.name}`)
-      await uploadBytes(fullRef, file)
-      const fullUrl = await getDownloadURL(fullRef)
+        // Upload full-res
+        const fullRef = ref(storage, `full/${file.name}`)
+        await uploadBytes(fullRef, file)
+        const fullUrl = await getDownloadURL(fullRef)
 
-      // Create thumbnail in browser
-      const thumbBlob = await imageCompression(file, {
-        maxWidthOrHeight: 300,
-        useWebWorker: true,
-      })
+        // Create thumbnail in browser
+        const thumbBlob = await imageCompression(file, {
+          maxWidthOrHeight: 300,
+          useWebWorker: true,
+        })
 
-      // Upload thumbnail
-      const thumbRef = ref(storage, `thumbnails/${file.name}`)
-      await uploadBytes(thumbRef, thumbBlob)
-      const thumbUrl = await getDownloadURL(thumbRef)
+        // Upload thumbnail
+        const thumbRef = ref(storage, `thumbnails/${file.name}`)
+        await uploadBytes(thumbRef, thumbBlob)
+        const thumbUrl = await getDownloadURL(thumbRef)
 
-      const createdDate = photoDate
-        ? Timestamp.fromDate(new Date(photoDate))
-        : null
+        const createdDate = photoDate
+          ? Timestamp.fromDate(new Date(photoDate))
+          : null
 
-      // Add Firestore doc
-      await addDoc(collection(db, 'photos'), {
-        id,
-        title,
-        category,
-        description,
-        location: location || null, // Store null if empty
-        storagePath: `full/${file.name}`,
-        thumbnailPath: `thumbnails/${file.name}`,
-        fullUrl,
-        thumbnailUrl: thumbUrl,
-        createdAt: serverTimestamp(),
-        photoDate: createdDate,
-      })
+        // Add Firestore doc
+        await addDoc(collection(db, 'photos'), {
+          id,
+          title,
+          category,
+          description,
+          location: location || null,
+          storagePath: `full/${file.name}`,
+          thumbnailPath: `thumbnails/${file.name}`,
+          projectID: projectID || null,
+          fullUrl,
+          thumbnailUrl: thumbUrl,
+          createdAt: serverTimestamp(),
+          photoDate: createdDate,
+        })
+      }
 
-      alert('Photo uploaded successfully!')
+      alert('All photos uploaded!')
+      setFiles([])
       setTitle('')
       setCategory('')
       setDescription('')
-      setFile(null)
+      setLocation('')
+      setProjectID('')
+      setPhotoDate('')
     } catch (error) {
       console.error(error)
-      alert('Error uploading photo.')
+      alert('Error uploading photos.')
     } finally {
       setLoading(false)
     }
@@ -90,14 +115,45 @@ export default function AddPhoto() {
           onSubmit={handleSubmit}
           style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}
         >
-          <input
-            type='file'
-            accept='image/*'
-            onChange={e => setFile(e.target.files ? e.target.files[0] : null)}
-          />
+          <label className={styles.fileInputLabel}>
+            {previewUrls.length > 0 ? (
+              <div
+                style={{
+                  display: 'flex',
+                  gap: '0.5rem',
+                  flexWrap: 'wrap',
+                  justifyContent: 'center',
+                }}
+              >
+                {previewUrls.map((url, i) => (
+                  <img
+                    key={i}
+                    src={url}
+                    alt={`Preview ${i + 1}`}
+                    style={{
+                      maxWidth: '100px',
+                      maxHeight: '100px',
+                      borderRadius: '8px',
+                      objectFit: 'cover',
+                    }}
+                  />
+                ))}
+              </div>
+            ) : (
+              'Choose images...'
+            )}
+            <input
+              type='file'
+              accept='image/*'
+              multiple
+              onChange={e =>
+                setFiles(e.target.files ? Array.from(e.target.files) : [])
+              }
+            />
+          </label>
           <input
             type='text'
-            placeholder='Title'
+            placeholder='Title (optional)'
             value={title}
             onChange={e => setTitle(e.target.value)}
           />
@@ -114,28 +170,31 @@ export default function AddPhoto() {
             onChange={e => setLocation(e.target.value)}
           />
           <select value={category} onChange={e => setCategory(e.target.value)}>
-            <option value=''>Select category</option>
+            <option value=''>Select category (optional)</option>
             {categories.map((cat: CollectionType) => (
               <option key={cat.name} value={cat.name}>
                 {cat.name}
               </option>
             ))}
           </select>
-          <select value={project} onChange={e => setProject(e.target.value)}>
-            <option value=''>Select project</option>
-            {/* {projects.map((proj: ProjectType) => (
+          <select
+            value={projectID}
+            onChange={e => setProjectID(e.target.value)}
+          >
+            <option value=''>Select project (optional)</option>
+            {projects.map((proj: ProjectType) => (
               <option key={proj.name} value={proj.name}>
                 {proj.name}
               </option>
-            ))} */}
+            ))}
           </select>
           <textarea
-            placeholder='Description'
+            placeholder='Description (optional)'
             value={description}
             onChange={e => setDescription(e.target.value)}
           />
           <button type='submit' disabled={loading}>
-            {loading ? 'Uploading...' : 'Upload Photo'}
+            {loading ? 'Uploading...' : 'Upload Photos'}
           </button>
         </form>
       </div>

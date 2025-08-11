@@ -3,6 +3,47 @@
 .AddPhoto {
   .content {
     max-width: 80%;
+    width: 600px;
     margin: $gap-2xl auto;
+
+    input,
+    textarea,
+    select {
+      padding: $gap-regular;
+      border-radius: 8px;
+      outline: none;
+      border: 1px solid $border-color;
+    }
+    button {
+      border: 1px solid $border-color;
+      margin: 0 auto;
+      margin-top: $gap-regular;
+      width: fit-content;
+      padding: 16px 24px;
+      border-radius: 16px;
+    }
+
+    .fileInputLabel {
+      display: block;
+      width: 100%;
+      padding: 1rem;
+      border: 2px dashed #aaa;
+      border-radius: 8px;
+      text-align: center;
+      color: #666;
+      font-weight: 600;
+      cursor: pointer;
+      transition: border-color 0.3s ease, color 0.3s ease;
+      user-select: none;
+
+      &:hover {
+        border-color: #333;
+        color: #000;
+      }
+
+      input[type='file'] {
+        display: none;
+      }
+    }
   }
 }

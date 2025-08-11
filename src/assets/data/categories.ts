@@ -7,19 +7,24 @@ export const categories: CollectionType[] = [
     path: '/collections/urban',
   },
   {
+    name: 'landscape',
+    imgSrc: '/images/home/1.webp',
+    path: '/collections/landscape',
+  },
+  {
     name: 'nature',
     imgSrc: '/images/home/4.webp',
     path: '/collections/nature',
   },
   {
-    name: 'architecture',
+    name: 'animals',
     imgSrc: '/images/home/3.webp',
-    path: '/collections/architecture',
+    path: '/collections/animals',
   },
   {
-    name: 'night',
+    name: 'architecture',
     imgSrc: '/images/home/4.webp',
-    path: '/collections/night',
+    path: '/collections/architecture',
   },
   {
     name: 'street',

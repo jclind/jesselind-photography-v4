@@ -18,12 +18,13 @@ export default function PhotoCard({ photo }: { photo: Photo }) {
   return (
     <div className={styles.card}>
       {/* Blurred thumbnail */}
-      <img
-        className={styles.thumbnail}
-        src={photo.thumbnailUrl || photo.thumbnailPath}
-        alt={photo.title}
-        aria-hidden='true'
-      />
+      <div className={styles.thumbnailWrapper} aria-hidden='true'>
+        <img
+          className={styles.thumbnail}
+          src={photo.thumbnailUrl || photo.thumbnailPath}
+          alt={photo.title}
+        />
+      </div>
       {/* Full-res image */}
       <img
         className={`${styles.fullImage} ${fullLoaded ? styles.loaded : ''}`}
