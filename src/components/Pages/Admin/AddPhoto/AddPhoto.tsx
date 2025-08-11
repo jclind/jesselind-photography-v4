@@ -2,7 +2,12 @@ import React, { useState } from 'react'
 import imageCompression from 'browser-image-compression'
 import { db, storage } from '../../../../lib/firebase'
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'
-import { collection, addDoc, serverTimestamp } from 'firebase/firestore'
+import {
+  collection,
+  addDoc,
+  serverTimestamp,
+  Timestamp,
+} from 'firebase/firestore'
 import styles from './AddPhoto.module.scss'
 import {
   categories,
@@ -11,7 +16,10 @@ import {
 
 export default function AddPhoto() {
   const [title, setTitle] = useState('')
+  const [photoDate, setPhotoDate] = useState<string>('')
+  const [location, setLocation] = useState('')
   const [category, setCategory] = useState('')
+  const [project, setProject] = useState('')
   const [description, setDescription] = useState('')
   const [file, setFile] = useState<File | null>(null)
   const [loading, setLoading] = useState(false)
@@ -43,17 +51,23 @@ export default function AddPhoto() {
       await uploadBytes(thumbRef, thumbBlob)
       const thumbUrl = await getDownloadURL(thumbRef)
 
+      const createdDate = photoDate
+        ? Timestamp.fromDate(new Date(photoDate))
+        : null
+
       // Add Firestore doc
       await addDoc(collection(db, 'photos'), {
         id,
         title,
         category,
         description,
+        location: location || null, // Store null if empty
         storagePath: `full/${file.name}`,
         thumbnailPath: `thumbnails/${file.name}`,
         fullUrl,
         thumbnailUrl: thumbUrl,
         createdAt: serverTimestamp(),
+        photoDate: createdDate,
       })
 
       alert('Photo uploaded successfully!')
@@ -87,6 +101,18 @@ export default function AddPhoto() {
             value={title}
             onChange={e => setTitle(e.target.value)}
           />
+          <input
+            type='date'
+            value={photoDate}
+            onChange={e => setPhotoDate(e.target.value)}
+            placeholder='Date taken (optional)'
+          />
+          <input
+            type='text'
+            placeholder='Location (optional)'
+            value={location}
+            onChange={e => setLocation(e.target.value)}
+          />
           <select value={category} onChange={e => setCategory(e.target.value)}>
             <option value=''>Select category</option>
             {categories.map((cat: CollectionType) => (
@@ -94,6 +120,14 @@ export default function AddPhoto() {
                 {cat.name}
               </option>
             ))}
+          </select>
+          <select value={project} onChange={e => setProject(e.target.value)}>
+            <option value=''>Select project</option>
+            {/* {projects.map((proj: ProjectType) => (
+              <option key={proj.name} value={proj.name}>
+                {proj.name}
+              </option>
+            ))} */}
           </select>
           <textarea
             placeholder='Description'

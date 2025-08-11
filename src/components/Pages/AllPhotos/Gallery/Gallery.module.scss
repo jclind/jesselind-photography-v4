@@ -3,12 +3,12 @@
 .Gallery {
   width: 100%;
   .content {
-    padding: 150px 150px;
+    padding: 150px 24px;
     .grid {
       display: grid;
-      grid-template-columns: 1fr 1fr;
+      grid-template-columns: 1fr 1fr 1fr 1fr;
       width: 100%;
-      gap: $gap-regular;
+      gap: $gap-xl;
       .card {
         position: relative;
         overflow: hidden;
