@@ -4,6 +4,10 @@ import { db, storage } from '../../../../lib/firebase'
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage'
 import { collection, addDoc, serverTimestamp } from 'firebase/firestore'
 import styles from './AddPhoto.module.scss'
+import {
+  categories,
+  type CollectionType,
+} from '../../../../assets/data/categories'
 
 export default function AddPhoto() {
   const [title, setTitle] = useState('')
@@ -83,12 +87,14 @@ export default function AddPhoto() {
             value={title}
             onChange={e => setTitle(e.target.value)}
           />
-          <input
-            type='text'
-            placeholder='Category'
-            value={category}
-            onChange={e => setCategory(e.target.value)}
-          />
+          <select value={category} onChange={e => setCategory(e.target.value)}>
+            <option value=''>Select category</option>
+            {categories.map((cat: CollectionType) => (
+              <option key={cat.name} value={cat.name}>
+                {cat.name}
+              </option>
+            ))}
+          </select>
           <textarea
             placeholder='Description'
             value={description}
