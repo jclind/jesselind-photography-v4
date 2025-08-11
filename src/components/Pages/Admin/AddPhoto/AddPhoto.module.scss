@@ -1,0 +1,8 @@
+@use '../../../../styles/vars' as *;
+
+.AddPhoto {
+  .content {
+    max-width: 80%;
+    margin: $gap-2xl auto;
+  }
+}
