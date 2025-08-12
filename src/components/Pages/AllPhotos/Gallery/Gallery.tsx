@@ -92,6 +92,44 @@ const Gallery = () => {
     return () => window.removeEventListener('scroll', onScroll)
   }, [fetchPhotos, loading, hasMore])
 
+  const calcAspectRatio = (photo: Photo): number => {
+    return photo.width / photo.height
+  }
+
+  useEffect(() => {
+    // Function to calculate the optimal height and number of photos to place in gallery row
+    const calculatePhotosRows = (originalPhotos: Photo[]) => {
+      const MAX_ROW_HEIGHT = 700
+
+      const photoRows: { rowPhotos: Photo[]; height: number }[] = []
+      let currRowIndex = 0
+      originalPhotos.map((photo, index, origArr) => {
+        const currR = calcAspectRatio(photo)
+        const pageW = window.innerWidth
+
+        if (currRowIndex >= photoRows.length) {
+          photoRows.push({ rowPhotos: [photo], height: pageW / currR })
+        }
+        const currRowRatioSum = photoRows[currRowIndex].rowPhotos.reduce(
+          (sum, rowPhoto) => sum + calcAspectRatio(rowPhoto),
+          0
+        )
+
+        const rowHeight = pageW / currRowRatioSum
+
+        if (rowHeight <= MAX_ROW_HEIGHT) {
+          currRowIndex++
+        }
+      })
+
+      return photoRows
+    }
+
+    const newPhotos =
+      photos.length > 0 ? calculatePhotosRows(photos) : 'DOES NOT EXIST'
+    console.log(newPhotos)
+  }, [photos])
+
   // Initial load
   useEffect(() => {
     fetchPhotos()

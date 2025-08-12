@@ -85,19 +85,13 @@
     margin-top: $gap-2xl;
   }
   .grid {
-    column-count: 4; // number of columns
-    column-gap: 0; // no gap between images
+    display: flex;
+    flex-wrap: wrap;
   }
 
   .card {
-    display: inline-block; // needed for column flow
-    width: 100%;
-    margin: 0;
   }
 
   .card img {
-    display: block;
-    width: 100%;
-    height: auto; // natural variable height
   }
 }
