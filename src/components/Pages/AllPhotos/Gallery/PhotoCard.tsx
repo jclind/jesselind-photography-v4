@@ -10,6 +10,8 @@ export interface Photo {
   thumbnailPath?: string
   fullUrl?: string
   storagePath?: string
+  height: number
+  width: number
 }
 
 export default function PhotoCard({
@@ -24,13 +26,15 @@ export default function PhotoCard({
   return (
     <div className={styles.card}>
       {/* Blurred thumbnail */}
-      {/* <div className={styles.thumbnailWrapper} aria-hidden='true'>
-        <img
-          className={styles.thumbnail}
-          src={photo.thumbnailUrl}
-          alt={photo.title}
-        />
-      </div> */}
+      {/* {!isThumbnailMode && (
+        <div className={styles.thumbnailWrapper} aria-hidden='true'>
+          <img
+            className={styles.thumbnail}
+            src={photo.thumbnailUrl}
+            alt={photo.title}
+          />
+        </div>
+      )} */}
       {/* Full-res image */}
       {isThumbnailMode ? (
         <h1>
@@ -46,6 +50,8 @@ export default function PhotoCard({
         alt={photo.title}
         loading='lazy'
         onLoad={() => setFullLoaded(true)}
+        height={photo.height}
+        width={photo.width}
       />
     </div>
   )

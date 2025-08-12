@@ -43,6 +43,27 @@ export default function AddPhoto() {
     return () => urls.forEach(url => URL.revokeObjectURL(url))
   }, [files])
 
+  async function getImageDimensionsFromFile(
+    file: File
+  ): Promise<{ width: number; height: number }> {
+    return new Promise((resolve, reject) => {
+      const img = new Image()
+      img.onload = () => {
+        resolve({ width: img.naturalWidth, height: img.naturalHeight })
+      }
+      img.onerror = reject
+
+      const reader = new FileReader()
+      reader.onload = e => {
+        if (e.target?.result) {
+          img.src = e.target.result as string
+        }
+      }
+      reader.onerror = reject
+      reader.readAsDataURL(file)
+    })
+  }
+
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     if (files.length === 0) return alert('Please select files.')
@@ -54,6 +75,9 @@ export default function AddPhoto() {
           .replace(/\.[^/.]+$/, '')
           .toLowerCase()
           .replace(/\s+/g, '-')
+
+        // Get dimensions from the file before uploading
+        const { width, height } = await getImageDimensionsFromFile(file)
 
         // Upload full-res
         const fullRef = ref(storage, `full/${file.name}`)
@@ -75,7 +99,7 @@ export default function AddPhoto() {
           ? Timestamp.fromDate(new Date(photoDate))
           : null
 
-        // Add Firestore doc
+        // Add Firestore doc with width & height
         await addDoc(collection(db, 'photos'), {
           id,
           title,
@@ -87,6 +111,8 @@ export default function AddPhoto() {
           projectID: projectID || null,
           fullUrl,
           thumbnailUrl: thumbUrl,
+          width,
+          height,
           createdAt: serverTimestamp(),
           photoDate: createdDate,
         })

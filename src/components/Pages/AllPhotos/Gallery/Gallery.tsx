@@ -23,7 +23,7 @@ const Gallery = () => {
   const [lastDoc, setLastDoc] = useState<QueryDocumentSnapshot | null>(null)
   const [hasMore, setHasMore] = useState(true)
 
-  const [isThumbnailMode, setIsThumbnailMode] = useState(true)
+  const [isThumbnailMode, setIsThumbnailMode] = useState(false)
 
   // Ref for the scroll listener to debounce it
   const scrollListener = useRef<any>(null)
@@ -100,7 +100,7 @@ const Gallery = () => {
   return (
     <div
       className={`${styles.Gallery} ${
-        isThumbnailMode ? styles.thumbnail_mode : ''
+        isThumbnailMode ? styles.thumbnail_mode : styles.full_img_mode
       }`}
     >
       <button
