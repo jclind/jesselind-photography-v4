@@ -13,6 +13,7 @@ import {
   Query,
 } from 'firebase/firestore'
 import PhotoCard, { type Photo } from './PhotoCard'
+import { LayoutGrid, LayoutList, PanelsTopLeft } from 'lucide-react'
 
 const PAGE_SIZE = 10
 
@@ -21,6 +22,8 @@ const Gallery = () => {
   const [loading, setLoading] = useState(false)
   const [lastDoc, setLastDoc] = useState<QueryDocumentSnapshot | null>(null)
   const [hasMore, setHasMore] = useState(true)
+
+  const [isThumbnailMode, setIsThumbnailMode] = useState(true)
 
   // Ref for the scroll listener to debounce it
   const scrollListener = useRef<any>(null)
@@ -95,11 +98,25 @@ const Gallery = () => {
   }, [])
 
   return (
-    <div className={styles.Gallery}>
+    <div
+      className={`${styles.Gallery} ${
+        isThumbnailMode ? styles.thumbnail_mode : ''
+      }`}
+    >
+      <button
+        className={styles.toggle_mode_btn}
+        onClick={() => setIsThumbnailMode(prev => !prev)}
+      >
+        {isThumbnailMode ? <LayoutGrid /> : <PanelsTopLeft />}
+      </button>
       <div className={styles.content}>
         <div className={styles.grid}>
           {photos.map((photo: Photo) => (
-            <PhotoCard key={photo.id} photo={photo} />
+            <PhotoCard
+              key={photo.id}
+              photo={photo}
+              isThumbnailMode={isThumbnailMode}
+            />
           ))}
         </div>
         {loading && <p>Loading more photos...</p>}

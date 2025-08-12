@@ -12,7 +12,13 @@ export interface Photo {
   storagePath?: string
 }
 
-export default function PhotoCard({ photo }: { photo: Photo }) {
+export default function PhotoCard({
+  photo,
+  isThumbnailMode,
+}: {
+  photo: Photo
+  isThumbnailMode: boolean
+}) {
   const [fullLoaded, setFullLoaded] = useState(false)
 
   return (
@@ -26,13 +32,17 @@ export default function PhotoCard({ photo }: { photo: Photo }) {
         />
       </div> */}
       {/* Full-res image */}
-      <h1>
-        {photo.storagePath &&
-          photo.storagePath.replace('full/', '').replace('.webp', '')}
-      </h1>
+      {isThumbnailMode ? (
+        <h1>
+          {photo.storagePath &&
+            photo.storagePath.replace('full/', '').replace('.webp', '')}
+        </h1>
+      ) : (
+        ''
+      )}
       <img
         className={`${styles.fullImage} ${fullLoaded ? styles.loaded : ''}`}
-        src={photo.thumbnailUrl}
+        src={isThumbnailMode ? photo.thumbnailUrl : photo.fullUrl}
         alt={photo.title}
         loading='lazy'
         onLoad={() => setFullLoaded(true)}
