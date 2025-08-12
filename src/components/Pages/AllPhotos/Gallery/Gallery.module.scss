@@ -6,43 +6,39 @@
     padding: 150px 24px;
     .grid {
       display: grid;
-      grid-template-columns: 1fr 1fr 1fr 1fr;
-      justify-content: center;
+      grid-template-columns: 1fr 1fr 1fr 1fr 1fr 1fr;
       align-items: center;
+      justify-items: flex-end;
+
       width: 100%;
-      gap: $gap-xl;
+      row-gap: $gap-3xl;
+      column-gap: $gap-xl;
 
       .card {
         display: flex;
-        align-items: center;
+        align-items: flex-end;
         justify-content: center;
         position: relative;
-        // height: fit-content;
-        // width: fit-content;
-        // max-height: 300px;
-        // max-width: 100%; /* add this to limit width */
         width: 100%;
-        max-width: 300px; // or your preferred max width
-        height: 300px; // fixed height to define vertical limit
-        overflow: hidden; // hide anything outside just in case
+        max-width: 300px;
+        height: 140px;
+        // overflow: hidden;
+
+        h1 {
+          position: absolute;
+          bottom: -24px;
+          // left: 0;
+          font-size: 10px;
+        }
 
         img {
-          display: block;
-          max-width: 100%;
-          max-height: 100%;
-          object-fit: contain;
         }
 
         .thumbnailWrapper {
           position: absolute;
-          // top: 0;
-          // left: 0;
-          // right: 0;
-          // bottom: 0;
-          // transform: translate(-50%, -50%);
-          overflow: hidden; // clips the blurred image
+          overflow: hidden;
           z-index: 1;
-          pointer-events: none; // optional, so it doesn't interfere with clicks
+          pointer-events: none;
           height: fit-content;
           width: fit-content;
         }
@@ -52,31 +48,15 @@
           object-fit: contain;
           width: 100%;
           height: 100%;
-          display: block;
-          // remove positioning and transform here, handled by wrapper
           position: relative;
           transform: none;
         }
 
-        // .thumbnail {
-        //   filter: blur(20px);
-        //   object-fit: contain;
-        //   transition: opacity 0.5s ease;
-        //   position: absolute;
-        //   left: 50%;
-        //   right: 0;
-        //   right: 50%;
-        //   bottom: 0;
-        //   transform: translate(-50%, -50%);
-        //   // width: 100%;
-        //   // height: 100%;
-        //   overflow: hidden;
-        //   z-index: 1;
-        //   box-sizing: border-box;
-        //   // remove transform: scale(1.05);
-        // }
-
         .fullImage {
+          display: block;
+          max-width: 100%;
+          max-height: 100%;
+          object-fit: contain;
           position: relative;
           z-index: 2;
           opacity: 0;

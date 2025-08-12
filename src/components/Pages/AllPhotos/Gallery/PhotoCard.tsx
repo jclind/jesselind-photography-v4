@@ -18,17 +18,21 @@ export default function PhotoCard({ photo }: { photo: Photo }) {
   return (
     <div className={styles.card}>
       {/* Blurred thumbnail */}
-      <div className={styles.thumbnailWrapper} aria-hidden='true'>
+      {/* <div className={styles.thumbnailWrapper} aria-hidden='true'>
         <img
           className={styles.thumbnail}
-          src={photo.thumbnailUrl || photo.thumbnailPath}
+          src={photo.thumbnailUrl}
           alt={photo.title}
         />
-      </div>
+      </div> */}
       {/* Full-res image */}
+      <h1>
+        {photo.storagePath &&
+          photo.storagePath.replace('full/', '').replace('.webp', '')}
+      </h1>
       <img
         className={`${styles.fullImage} ${fullLoaded ? styles.loaded : ''}`}
-        src={photo.fullUrl || photo.storagePath}
+        src={photo.thumbnailUrl}
         alt={photo.title}
         loading='lazy'
         onLoad={() => setFullLoaded(true)}
