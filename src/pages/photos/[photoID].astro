@@ -1,0 +1,13 @@
+---
+export const prerender = false;
+
+import SinglePhoto from '../../components/Pages/SinglePhoto';
+import Layout from '../../layouts/Layout.astro';
+import '../../styles/global.scss';
+
+const { photoID } = Astro.params;
+---
+
+<Layout>
+  <SinglePhoto photoID={photoID} client:load />
+</Layout>

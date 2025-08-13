@@ -7,6 +7,8 @@ import {
   addDoc,
   serverTimestamp,
   Timestamp,
+  runTransaction,
+  doc,
 } from 'firebase/firestore'
 import styles from './AddPhoto.module.scss'
 import {
@@ -67,59 +69,79 @@ export default function AddPhoto() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     if (files.length === 0) return alert('Please select files.')
-    const createdDate = photoDate
-      ? Timestamp.fromDate(new Date(photoDate))
-      : null
-    if (createdDate === null)
-      return alert('Please enter correct date of capture')
+
+    if (!photoDate) return alert('Please enter a valid date')
+    const createdDate = new Date(photoDate)
 
     setLoading(true)
+
     try {
-      for (const file of files) {
-        const id = file.name
-          .replace(/\.[^/.]+$/, '')
-          .toLowerCase()
-          .replace(/\s+/g, '-')
+      const counterRef = doc(db, 'counters', 'photos')
 
-        // Get dimensions from the file before uploading
-        const { width, height } = await getImageDimensionsFromFile(file)
+      await runTransaction(db, async transaction => {
+        // Get current last sequence number
+        const counterSnap = await transaction.get(counterRef)
+        let lastSequenceNumber = 0
+        if (counterSnap.exists()) {
+          lastSequenceNumber = counterSnap.data().lastSequenceNumber || 0
+        } else {
+          transaction.set(counterRef, { lastSequenceNumber: 0 })
+        }
 
-        // Upload full-res
-        const fullRef = ref(storage, `full/${file.name}`)
-        await uploadBytes(fullRef, file)
-        const fullUrl = await getDownloadURL(fullRef)
+        for (const file of files) {
+          // Generate a sanitized ID from filename
+          const id = file.name
+            .replace(/\.[^/.]+$/, '')
+            .toLowerCase()
+            .replace(/\s+/g, '-')
 
-        // Create thumbnail in browser
-        const thumbBlob = await imageCompression(file, {
-          maxWidthOrHeight: 300,
-          useWebWorker: true,
-        })
+          // Get dimensions
+          const { width, height } = await getImageDimensionsFromFile(file)
 
-        // Upload thumbnail
-        const thumbRef = ref(storage, `thumbnails/${file.name}`)
-        await uploadBytes(thumbRef, thumbBlob)
-        const thumbUrl = await getDownloadURL(thumbRef)
+          // Upload full image
+          const fullRef = ref(storage, `full/${file.name}`)
+          await uploadBytes(fullRef, file)
+          const fullUrl = await getDownloadURL(fullRef)
 
-        // Add Firestore doc with width & height
-        await addDoc(collection(db, 'photos'), {
-          id,
-          title,
-          category,
-          description,
-          location: location || null,
-          storagePath: `full/${file.name}`,
-          thumbnailPath: `thumbnails/${file.name}`,
-          projectID: projectID || null,
-          fullUrl,
-          thumbnailUrl: thumbUrl,
-          width,
-          height,
-          createdAt: serverTimestamp(),
-          photoDate: createdDate,
-        })
-      }
+          // Create and upload thumbnail
+          const thumbBlob = await imageCompression(file, {
+            maxWidthOrHeight: 300,
+            useWebWorker: true,
+          })
+          const thumbRef = ref(storage, `thumbnails/${file.name}`)
+          await uploadBytes(thumbRef, thumbBlob)
+          const thumbUrl = await getDownloadURL(thumbRef)
+
+          // Increment sequence number
+          lastSequenceNumber++
+
+          // Add photo doc
+          const photoRef = doc(collection(db, 'photos'))
+          transaction.set(photoRef, {
+            id,
+            title,
+            category,
+            description,
+            location: location || null,
+            storagePath: `full/${file.name}`,
+            thumbnailPath: `thumbnails/${file.name}`,
+            projectID: projectID || null,
+            fullUrl,
+            thumbnailUrl: thumbUrl,
+            width,
+            height,
+            createdAt: serverTimestamp(),
+            photoDate: createdDate,
+            sequenceNumber: lastSequenceNumber,
+          })
+        }
+
+        // Update the counter with new last sequence number
+        transaction.update(counterRef, { lastSequenceNumber })
+      })
 
       alert('All photos uploaded!')
+      // Reset form
       setFiles([])
       setTitle('')
       setCategory('')

@@ -9,9 +9,12 @@ export interface Photo {
   thumbnailUrl?: string
   thumbnailPath?: string
   fullUrl?: string
+  photoDate: string
   storagePath?: string
+  location?: string
   height: number
   width: number
+  sequenceNumber: number
 }
 
 export default function PhotoCard({
@@ -24,7 +27,7 @@ export default function PhotoCard({
   const [fullLoaded, setFullLoaded] = useState(false)
 
   return (
-    <div className={styles.card}>
+    <a href={`/photos/${photo.id}`} className={styles.card}>
       {/* Blurred thumbnail */}
       {/* {!isThumbnailMode && (
         <div className={styles.thumbnailWrapper} aria-hidden='true'>
@@ -53,6 +56,6 @@ export default function PhotoCard({
         height={photo.height}
         width={photo.width}
       />
-    </div>
+    </a>
   )
 }
