@@ -15,10 +15,17 @@ import {
 import PhotoCard, { type Photo } from './PhotoCard'
 import { LayoutGrid, LayoutList, PanelsTopLeft } from 'lucide-react'
 
+export type PhotoRowsType = {
+  rowPhotos: Photo[]
+  height: number
+}
+
 const PAGE_SIZE = 10
 
 const Gallery = () => {
   const [photos, setPhotos] = useState<Photo[]>([])
+  const [formattedPhotos, setFormattedPhotos] = useState<PhotoRowsType[]>([])
+
   const [loading, setLoading] = useState(false)
   const [lastDoc, setLastDoc] = useState<QueryDocumentSnapshot | null>(null)
   const [hasMore, setHasMore] = useState(true)
@@ -99,23 +106,35 @@ const Gallery = () => {
   useEffect(() => {
     // Function to calculate the optimal height and number of photos to place in gallery row
     const calculatePhotosRows = (originalPhotos: Photo[]) => {
-      const MAX_ROW_HEIGHT = 700
+      console.log('originalPhotos', originalPhotos)
+      const MAX_ROW_HEIGHT = 500
 
       const photoRows: { rowPhotos: Photo[]; height: number }[] = []
       let currRowIndex = 0
       originalPhotos.map((photo, index, origArr) => {
         const currR = calcAspectRatio(photo)
         const pageW = window.innerWidth
+        let rowHeight = 0
 
         if (currRowIndex >= photoRows.length) {
-          photoRows.push({ rowPhotos: [photo], height: pageW / currR })
-        }
-        const currRowRatioSum = photoRows[currRowIndex].rowPhotos.reduce(
-          (sum, rowPhoto) => sum + calcAspectRatio(rowPhoto),
-          0
-        )
+          rowHeight = pageW / currR
+          photoRows.push({
+            rowPhotos: [photo],
+            height: rowHeight > MAX_ROW_HEIGHT ? MAX_ROW_HEIGHT : rowHeight,
+          })
+        } else {
+          const newRowPhotos = [...photoRows[currRowIndex].rowPhotos, photo]
+          const currRowRatioSum = newRowPhotos.reduce(
+            (sum, rowPhoto) => sum + calcAspectRatio(rowPhoto),
+            0
+          )
+          rowHeight = pageW / currRowRatioSum
 
-        const rowHeight = pageW / currRowRatioSum
+          photoRows[currRowIndex] = {
+            rowPhotos: newRowPhotos,
+            height: rowHeight,
+          }
+        }
 
         if (rowHeight <= MAX_ROW_HEIGHT) {
           currRowIndex++
@@ -125,9 +144,9 @@ const Gallery = () => {
       return photoRows
     }
 
-    const newPhotos =
-      photos.length > 0 ? calculatePhotosRows(photos) : 'DOES NOT EXIST'
+    const newPhotos = photos.length > 0 ? calculatePhotosRows(photos) : []
     console.log(newPhotos)
+    setFormattedPhotos(newPhotos)
   }, [photos])
 
   // Initial load
