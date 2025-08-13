@@ -67,6 +67,11 @@ export default function AddPhoto() {
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     if (files.length === 0) return alert('Please select files.')
+    const createdDate = photoDate
+      ? Timestamp.fromDate(new Date(photoDate))
+      : null
+    if (createdDate === null)
+      return alert('Please enter correct date of capture')
 
     setLoading(true)
     try {
@@ -94,10 +99,6 @@ export default function AddPhoto() {
         const thumbRef = ref(storage, `thumbnails/${file.name}`)
         await uploadBytes(thumbRef, thumbBlob)
         const thumbUrl = await getDownloadURL(thumbRef)
-
-        const createdDate = photoDate
-          ? Timestamp.fromDate(new Date(photoDate))
-          : null
 
         // Add Firestore doc with width & height
         await addDoc(collection(db, 'photos'), {
