@@ -88,7 +88,7 @@ const Gallery = () => {
     const onScroll = () => {
       if (
         window.innerHeight + window.scrollY >=
-          document.documentElement.scrollHeight - 800 && // give a bit more buffer
+          document.documentElement.scrollHeight - 1000 && // give a bit more buffer
         !loading &&
         hasMore
       ) {
@@ -153,16 +153,18 @@ const Gallery = () => {
     fetchPhotos()
   }, [])
 
+  const handleModeToggle = () => {
+    window.scrollTo(0, 0)
+    setIsThumbnailMode(prev => !prev)
+  }
+
   return (
     <div
       className={`${styles.Gallery} ${
         isThumbnailMode ? styles.thumbnail_mode : styles.full_img_mode
       }`}
     >
-      <button
-        className={styles.toggle_mode_btn}
-        onClick={() => setIsThumbnailMode(prev => !prev)}
-      >
+      <button className={styles.toggle_mode_btn} onClick={handleModeToggle}>
         {isThumbnailMode ? <LayoutGrid /> : <PanelsTopLeft />}
       </button>
       <div className={styles.content}>
