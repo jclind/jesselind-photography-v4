@@ -181,8 +181,6 @@ const Gallery = () => {
             <PhotoRows photos={formattedPhotos} />
           )}
         </div>
-        {loading && <p>Loading more photos...</p>}
-        {!hasMore && <p>No more photos to load.</p>}
       </div>
     </div>
   )
