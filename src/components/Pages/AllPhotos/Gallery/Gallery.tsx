@@ -20,6 +20,9 @@ export type PhotoRowsType = {
   rowPhotos: Photo[]
   height: number
 }
+export const calcAspectRatio = (photo: Photo): number => {
+  return photo.width / photo.height
+}
 
 const PAGE_SIZE = 10
 
@@ -83,12 +86,9 @@ const Gallery = () => {
   // Scroll event handler for infinite scroll
   useEffect(() => {
     const onScroll = () => {
-      // console.log('innerHeight', window.innerHeight)
-      // console.log('offsetHeight', window.scrollY)
-      // console.log('scrollHeight', document.documentElement.scrollHeight)
       if (
         window.innerHeight + window.scrollY >=
-          document.documentElement.scrollHeight - 100 && // give a bit more buffer
+          document.documentElement.scrollHeight - 800 && // give a bit more buffer
         !loading &&
         hasMore
       ) {
@@ -100,15 +100,12 @@ const Gallery = () => {
     return () => window.removeEventListener('scroll', onScroll)
   }, [fetchPhotos, loading, hasMore])
 
-  const calcAspectRatio = (photo: Photo): number => {
-    return photo.width / photo.height
-  }
-
   useEffect(() => {
     // Function to calculate the optimal height and number of photos to place in gallery row
     const calculatePhotosRows = (originalPhotos: Photo[]) => {
       console.log('originalPhotos', originalPhotos)
-      const MAX_ROW_HEIGHT = 500
+      const MAX_ROW_HEIGHT = 700
+      const PREFERRED_ROW_HEIGHT = 600
 
       const photoRows: { rowPhotos: Photo[]; height: number }[] = []
       let currRowIndex = 0
@@ -121,7 +118,8 @@ const Gallery = () => {
           rowHeight = pageW / currR
           photoRows.push({
             rowPhotos: [photo],
-            height: rowHeight > MAX_ROW_HEIGHT ? MAX_ROW_HEIGHT : rowHeight,
+            height:
+              rowHeight > MAX_ROW_HEIGHT ? PREFERRED_ROW_HEIGHT : rowHeight,
           })
         } else {
           const newRowPhotos = [...photoRows[currRowIndex].rowPhotos, photo]
