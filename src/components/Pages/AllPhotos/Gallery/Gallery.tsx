@@ -14,6 +14,7 @@ import {
 } from 'firebase/firestore'
 import PhotoCard, { type Photo } from './PhotoCard'
 import { LayoutGrid, LayoutList, PanelsTopLeft } from 'lucide-react'
+import PhotoRows from './PhotoRows'
 
 export type PhotoRowsType = {
   rowPhotos: Photo[]
@@ -168,13 +169,17 @@ const Gallery = () => {
       </button>
       <div className={styles.content}>
         <div className={styles.grid}>
-          {photos.map((photo: Photo) => (
-            <PhotoCard
-              key={photo.id}
-              photo={photo}
-              isThumbnailMode={isThumbnailMode}
-            />
-          ))}
+          {isThumbnailMode ? (
+            photos.map((photo: Photo) => (
+              <PhotoCard
+                key={photo.id}
+                photo={photo}
+                isThumbnailMode={isThumbnailMode}
+              />
+            ))
+          ) : (
+            <PhotoRows photos={formattedPhotos} />
+          )}
         </div>
         {loading && <p>Loading more photos...</p>}
         {!hasMore && <p>No more photos to load.</p>}
