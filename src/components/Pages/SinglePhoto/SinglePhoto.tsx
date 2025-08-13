@@ -34,11 +34,50 @@ const SinglePhoto = ({ photoID }: { photoID: string | undefined }) => {
     loadPhotos()
   }, [photoID])
 
-  const handleClickPrev = () => {
-    console.log('prev clicked')
+  const handleClickNext = async () => {
+    if (!nextPhoto) return
+
+    // Step 1: update current photo
+    setPhoto(nextPhoto)
+
+    // Step 2: fetch new next/previous photos
+    const newNext1 = await getNextPhoto(nextPhoto.sequenceNumber)
+    const newNext2 = newNext1
+      ? await getNextPhoto(newNext1.sequenceNumber)
+      : null
+    const newNext3 = newNext2
+      ? await getNextPhoto(newNext2.sequenceNumber)
+      : null
+    const newPrev = await getPrevPhoto(nextPhoto.sequenceNumber)
+
+    setNextPhoto(newNext1)
+    setPrevPhoto(newPrev)
+
+    // Step 3: preload the next 3 images
+    preloadImages([newNext1?.fullUrl, newNext2?.fullUrl, newNext3?.fullUrl])
   }
-  const handleClickNext = () => {
-    console.log('next clicked')
+
+  const handleClickPrev = async () => {
+    if (!prevPhoto) return
+
+    // Step 1: update current photo
+    setPhoto(prevPhoto)
+
+    // Step 2: fetch new next/previous photos
+    const newNext = await getNextPhoto(prevPhoto.sequenceNumber)
+    const newPrev1 = await getPrevPhoto(prevPhoto.sequenceNumber)
+    const newPrev2 = newPrev1
+      ? await getPrevPhoto(newPrev1.sequenceNumber)
+      : null
+    const newPrev3 = newPrev2
+      ? await getPrevPhoto(newPrev2.sequenceNumber)
+      : null
+
+    setNextPhoto(newNext)
+    setPrevPhoto(newPrev1)
+
+    // Step 3: preload the next 3 images forward (optional)
+    preloadImages([newNext?.fullUrl, newPrev1?.fullUrl, newPrev2?.fullUrl])
   }
 
   const location = photo && photo.location ? photo.location : null
