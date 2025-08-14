@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
-import styles from './Gallery.module.scss'
+import styles from './GalleryTemplate.module.scss'
 import type { Timestamp } from 'firebase/firestore'
-import { usePhotoStore } from '../../../../store/photoStore'
-import { storeImageInSession } from './Gallery'
+import { usePhotoStore } from '../../../store/photoStore'
+import { storeImageInSession } from './GalleryTemplate'
 
 export interface Photo {
   id: string
@@ -36,6 +36,13 @@ export default function PhotoThumbnail({
       href={`/photos/${photo.id}`}
       className={styles.card}
       onClick={() => storeImageInSession(photo)}
+      data-astro-prefetch='hover'
+      onMouseEnter={() => {
+        if (photo.fullUrl) {
+          const img = new Image()
+          img.src = photo.fullUrl
+        }
+      }}
     >
       {/* Blurred thumbnail */}
       {/* {!isThumbnailMode && (

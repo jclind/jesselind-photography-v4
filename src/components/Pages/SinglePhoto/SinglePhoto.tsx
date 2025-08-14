@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import styles from './SinglePhoto.module.scss'
-import type { Photo } from '../AllPhotos/Gallery/PhotoThumbnail'
 import {
   getPhotoById,
   getNextPhoto,
@@ -13,6 +12,7 @@ import {
 import { Info, LayoutGrid, MoveLeft, MoveRight, X } from 'lucide-react'
 import { formatTimestampDate } from '../../../util/date'
 import { usePhotoStore } from '../../../store/photoStore'
+import type { Photo } from '../../Common/GalleryTemplate/PhotoThumbnail'
 
 const SinglePhoto = ({ photoID }: { photoID: string | undefined }) => {
   const storePhoto = usePhotoStore(state => state.selectedPhoto)
@@ -30,15 +30,12 @@ const SinglePhoto = ({ photoID }: { photoID: string | undefined }) => {
   useEffect(() => {
     async function loadPhotos() {
       let current: null | Photo = photo
-      console.log('VALUES:', current, photo, storePhoto)
       if (!current) {
         const saved = sessionStorage.getItem('selectedPhoto')
         if (saved) {
           const parsedSaved = JSON.parse(saved)
-          console.log('Saved img:', saved, 'Parsed:', parsedSaved)
           current = parsedSaved
         } else {
-          console.log('I shouldnt be here in !current')
           setIsLoading(true)
           await getPhotoById(photoID).then(fetched => {
             if (fetched) {
@@ -58,9 +55,6 @@ const SinglePhoto = ({ photoID }: { photoID: string | undefined }) => {
       setPrevPhoto(prev)
 
       if (next) preloadImages([next.fullUrl])
-
-      console.log(current, next, prev)
-      console.log(photoID)
     }
 
     loadPhotos()
@@ -189,7 +183,6 @@ const SinglePhoto = ({ photoID }: { photoID: string | undefined }) => {
   }
 
   const location = photo && photo.location ? photo.location : null
-  console.log(photo?.photoDate)
   const dateCaptured =
     photo && photo.photoDate ? formatTimestampDate(photo.photoDate) : null
 

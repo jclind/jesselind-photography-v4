@@ -1,0 +1,18 @@
+---
+import CollectionGallery from '../../components/Pages/CollectionGallery';
+import Layout from '../../layouts/Layout.astro';
+import '../../styles/global.scss';
+import { categories } from '../../assets/data/categories';
+
+export async function getStaticPaths() {
+  return categories.map(category => ({
+    params: { collectionID: category.name }
+  }));
+}
+
+const { collectionID } = Astro.params;
+---
+
+<Layout>
+  <CollectionGallery collectionID={collectionID} client:load />
+</Layout>
