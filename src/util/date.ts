@@ -1,9 +1,17 @@
 import { Timestamp } from 'firebase/firestore'
 
-export function formatTimestampDate(timestamp: Timestamp | null): string {
+export function formatTimestampDate(timestamp: any | null): string {
   if (!timestamp) return ''
 
-  const date = timestamp.toDate() // Convert Firestore Timestamp to JS Date
+  let date: Date
+
+  // Check if it's a Firestore Timestamp
+  if (typeof timestamp.toDate === 'function') {
+    date = timestamp.toDate()
+  } else {
+    date = new Date(timestamp)
+  }
+
   const options: Intl.DateTimeFormatOptions = {
     month: 'long', // Full month name (e.g., January)
     day: 'numeric', // Day of the month

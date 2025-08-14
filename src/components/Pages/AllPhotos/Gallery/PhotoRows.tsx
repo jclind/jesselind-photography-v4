@@ -1,5 +1,9 @@
 import React from 'react'
-import { calcAspectRatio, type PhotoRowsType } from './Gallery'
+import {
+  calcAspectRatio,
+  storeImageInSession,
+  type PhotoRowsType,
+} from './Gallery'
 import styles from './Gallery.module.scss'
 
 const PhotoRows = ({ photos }: { photos: PhotoRowsType[] }) => {
@@ -18,7 +22,14 @@ const PhotoRows = ({ photos }: { photos: PhotoRowsType[] }) => {
               console.log('height', h)
               console.log('width', w)
               // return <img src={photo.fullUrl} />
-              return <img src={photo.fullUrl} height={h} width={w} />
+              return (
+                <a
+                  href={`/photos/${photo.id}`}
+                  onClick={() => storeImageInSession(photo)}
+                >
+                  <img src={photo.fullUrl} height={h} width={w} />
+                </a>
+              )
             })}
           </div>
         )

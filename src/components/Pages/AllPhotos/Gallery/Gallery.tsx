@@ -12,7 +12,7 @@ import {
   QueryDocumentSnapshot,
   Query,
 } from 'firebase/firestore'
-import PhotoCard, { type Photo } from './PhotoCard'
+import PhotoThumbnail, { type Photo } from './PhotoThumbnail'
 import { LayoutGrid, LayoutList, PanelsTopLeft } from 'lucide-react'
 import PhotoRows from './PhotoRows'
 
@@ -22,6 +22,9 @@ export type PhotoRowsType = {
 }
 export const calcAspectRatio = (photo: Photo): number => {
   return photo.width / photo.height
+}
+export const storeImageInSession = (photo: Photo) => {
+  sessionStorage.setItem('selectedPhoto', JSON.stringify(photo))
 }
 
 const PAGE_SIZE = 10
@@ -171,7 +174,7 @@ const Gallery = () => {
         <div className={styles.grid}>
           {isThumbnailMode ? (
             photos.map((photo: Photo) => (
-              <PhotoCard
+              <PhotoThumbnail
                 key={photo.id}
                 photo={photo}
                 isThumbnailMode={isThumbnailMode}

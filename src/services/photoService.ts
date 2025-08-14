@@ -9,7 +9,7 @@ import {
   doc,
 } from 'firebase/firestore'
 import { db } from '../lib/firebase'
-import type { Photo } from '../components/Pages/AllPhotos/Gallery/PhotoCard'
+import type { Photo } from '../components/Pages/AllPhotos/Gallery/PhotoThumbnail'
 
 // Get the first photo in the sequence
 export async function getFirstPhoto(): Promise<Photo | null> {

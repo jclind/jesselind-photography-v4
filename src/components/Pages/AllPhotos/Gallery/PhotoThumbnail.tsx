@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
 import styles from './Gallery.module.scss'
 import type { Timestamp } from 'firebase/firestore'
+import { usePhotoStore } from '../../../../store/photoStore'
+import { storeImageInSession } from './Gallery'
 
 export interface Photo {
   id: string
@@ -18,7 +20,7 @@ export interface Photo {
   sequenceNumber: number
 }
 
-export default function PhotoCard({
+export default function PhotoThumbnail({
   photo,
   isThumbnailMode,
 }: {
@@ -27,8 +29,14 @@ export default function PhotoCard({
 }) {
   const [fullLoaded, setFullLoaded] = useState(false)
 
+  const setSelectedPhoto = usePhotoStore(state => state.setSelectedPhoto)
+
   return (
-    <a href={`/photos/${photo.id}`} className={styles.card}>
+    <a
+      href={`/photos/${photo.id}`}
+      className={styles.card}
+      onClick={() => storeImageInSession(photo)}
+    >
       {/* Blurred thumbnail */}
       {/* {!isThumbnailMode && (
         <div className={styles.thumbnailWrapper} aria-hidden='true'>

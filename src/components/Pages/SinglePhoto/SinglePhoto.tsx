@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import styles from './SinglePhoto.module.scss'
-import type { Photo } from '../AllPhotos/Gallery/PhotoCard'
+import type { Photo } from '../AllPhotos/Gallery/PhotoThumbnail'
 import {
   getPhotoById,
   getNextPhoto,
@@ -12,20 +12,44 @@ import {
 } from '../../../services/photoService'
 import { Info, LayoutGrid, MoveLeft, MoveRight, X } from 'lucide-react'
 import { formatTimestampDate } from '../../../util/date'
+import { usePhotoStore } from '../../../store/photoStore'
 
 const SinglePhoto = ({ photoID }: { photoID: string | undefined }) => {
-  const [photo, setPhoto] = useState<Photo | null>(null)
+  const storePhoto = usePhotoStore(state => state.selectedPhoto)
+  const [photo, setPhoto] = useState(storePhoto)
+  const [displayedPhoto, setDisplayedPhoto] = useState<Photo | null>(storePhoto)
+
   const [nextPhoto, setNextPhoto] = useState<Photo | null>(null)
   const [prevPhoto, setPrevPhoto] = useState<Photo | null>(null)
-  const [isLoading, setIsLoading] = useState(true)
+  const [isLoading, setIsLoading] = useState(false)
+  const [showLoader, setShowLoader] = useState(false)
   const [isFetching, setIsFetching] = useState(false)
   const [timeoutMessage, setTimeoutMessage] = useState<string | null>(null)
   const [isInfoOpen, setIsInfoOpen] = useState(false)
 
   useEffect(() => {
     async function loadPhotos() {
-      const current = await getPhotoById(photoID)
-      setPhoto(current)
+      let current: null | Photo = photo
+      console.log('VALUES:', current, photo, storePhoto)
+      if (!current) {
+        const saved = sessionStorage.getItem('selectedPhoto')
+        if (saved) {
+          const parsedSaved = JSON.parse(saved)
+          console.log('Saved img:', saved, 'Parsed:', parsedSaved)
+          current = parsedSaved
+        } else {
+          console.log('I shouldnt be here in !current')
+          setIsLoading(true)
+          await getPhotoById(photoID).then(fetched => {
+            if (fetched) {
+              current = fetched
+            }
+          })
+        }
+        setPhoto(current)
+        setDisplayedPhoto(current)
+        // fallback if user came directly to the page
+      }
 
       const next = await getNextPhoto(current?.sequenceNumber || 0)
       setNextPhoto(next)
@@ -41,6 +65,21 @@ const SinglePhoto = ({ photoID }: { photoID: string | undefined }) => {
 
     loadPhotos()
   }, [photoID])
+
+  useEffect(() => {
+    let timer: NodeJS.Timeout | null = null
+
+    if (isLoading || isFetching) {
+      // Only show loader if loading takes longer than 200ms
+      timer = setTimeout(() => setShowLoader(true), 200)
+    } else {
+      setShowLoader(false)
+    }
+
+    return () => {
+      if (timer) clearTimeout(timer)
+    }
+  }, [isLoading, isFetching])
 
   useEffect(() => {
     setIsLoading(true)
@@ -154,25 +193,46 @@ const SinglePhoto = ({ photoID }: { photoID: string | undefined }) => {
   const dateCaptured =
     photo && photo.photoDate ? formatTimestampDate(photo.photoDate) : null
 
+  // Handler for when new photo image finishes loading
+  const handleImageLoad = () => {
+    setIsLoading(false)
+    setDisplayedPhoto(photo)
+  }
+
   return (
     <div className={styles.SinglePhoto}>
       <div className={styles.content}>
         <div className={styles.inner}>
-          {photo && (
+          {displayedPhoto && (
             <>
-              {(isLoading || isFetching) && (
-                <div className={styles.spinner}>Loading...</div>
-              )}
+              {showLoader && <div className={styles.spinner}>Loading...</div>}
               {timeoutMessage && (
                 <div className={styles.errorMessage}>{timeoutMessage}</div>
               )}
               <img
-                src={photo?.fullUrl}
-                style={{ display: isLoading ? 'none' : 'block' }}
-                onLoad={() => setIsLoading(false)}
-                onError={() => setIsLoading(false)}
-                alt={photo?.title || 'Photo'}
+                src={displayedPhoto.fullUrl}
+                className={`${styles.photo} ${
+                  isLoading ? styles.fadeOut : styles.fadeIn
+                }`}
+                alt={displayedPhoto.title || 'Photo'}
+                style={{
+                  position: 'absolute',
+                  top: 0,
+                  left: 0,
+                  width: '100%',
+                  height: '100%',
+                }}
+                draggable={false}
               />
+              {photo && photo.fullUrl !== displayedPhoto.fullUrl && (
+                <img
+                  src={photo.fullUrl}
+                  onLoad={handleImageLoad}
+                  alt={photo.title || 'Photo'}
+                  style={{ display: 'none' }}
+                  draggable={false}
+                />
+              )}
             </>
           )}
           <button
@@ -215,11 +275,11 @@ const SinglePhoto = ({ photoID }: { photoID: string | undefined }) => {
         }`}
       >
         <div className={styles.background}></div>
-        {photo ? (
+        {displayedPhoto ? (
           <div className={styles.text_container}>
             <div className={styles.text}>
               <span>Photo ID:</span>
-              {photo.id}
+              {displayedPhoto.id}
             </div>
             {location && (
               <div className={styles.text}>
