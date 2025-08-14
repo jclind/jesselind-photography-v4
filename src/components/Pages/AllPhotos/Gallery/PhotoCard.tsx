@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import styles from './Gallery.module.scss'
+import type { Timestamp } from 'firebase/firestore'
 
 export interface Photo {
   id: string
@@ -9,7 +10,7 @@ export interface Photo {
   thumbnailUrl?: string
   thumbnailPath?: string
   fullUrl?: string
-  photoDate: string
+  photoDate: Timestamp
   storagePath?: string
   location?: string
   height: number

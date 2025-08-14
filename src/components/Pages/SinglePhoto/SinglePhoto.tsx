@@ -10,7 +10,8 @@ import {
   getFirstPhoto,
   timeoutFetch,
 } from '../../../services/photoService'
-import { LayoutGrid, MoveLeft, MoveRight } from 'lucide-react'
+import { Info, LayoutGrid, MoveLeft, MoveRight, X } from 'lucide-react'
+import { formatTimestampDate } from '../../../util/date'
 
 const SinglePhoto = ({ photoID }: { photoID: string | undefined }) => {
   const [photo, setPhoto] = useState<Photo | null>(null)
@@ -19,6 +20,7 @@ const SinglePhoto = ({ photoID }: { photoID: string | undefined }) => {
   const [isLoading, setIsLoading] = useState(true)
   const [isFetching, setIsFetching] = useState(false)
   const [timeoutMessage, setTimeoutMessage] = useState<string | null>(null)
+  const [isInfoOpen, setIsInfoOpen] = useState(false)
 
   useEffect(() => {
     async function loadPhotos() {
@@ -148,6 +150,9 @@ const SinglePhoto = ({ photoID }: { photoID: string | undefined }) => {
   }
 
   const location = photo && photo.location ? photo.location : null
+  console.log(photo?.photoDate)
+  const dateCaptured =
+    photo && photo.photoDate ? formatTimestampDate(photo.photoDate) : null
 
   return (
     <div className={styles.SinglePhoto}>
@@ -193,6 +198,41 @@ const SinglePhoto = ({ photoID }: { photoID: string | undefined }) => {
             </button>
           </div>
         </div>
+        <button
+          className={`${styles.info_btn} ${isInfoOpen ? styles.open : ''}`}
+          onClick={() => setIsInfoOpen(prev => !prev)}
+        >
+          {isInfoOpen ? (
+            <X size={20} strokeWidth={1.2} />
+          ) : (
+            <Info size={20} strokeWidth={1.2} />
+          )}
+        </button>
+      </div>
+      <div
+        className={`${styles.info_container} ${
+          isInfoOpen ? styles.open : styles.closed
+        }`}
+      >
+        <div className={styles.background}></div>
+        {photo ? (
+          <div className={styles.text_container}>
+            <div className={styles.text}>
+              <span>Photo ID:</span>
+              {photo.id}
+            </div>
+            {location && (
+              <div className={styles.text}>
+                <span>Location:</span> {location}
+              </div>
+            )}
+            {dateCaptured && (
+              <div className={styles.text}>
+                <span>Taken:</span> {dateCaptured}
+              </div>
+            )}
+          </div>
+        ) : null}
       </div>
     </div>
   )
