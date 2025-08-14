@@ -44,17 +44,6 @@ export default function PhotoThumbnail({
         }
       }}
     >
-      {/* Blurred thumbnail */}
-      {/* {!isThumbnailMode && (
-        <div className={styles.thumbnailWrapper} aria-hidden='true'>
-          <img
-            className={styles.thumbnail}
-            src={photo.thumbnailUrl}
-            alt={photo.title}
-          />
-        </div>
-      )} */}
-      {/* Full-res image */}
       {isThumbnailMode ? (
         <h1>
           {photo.storagePath &&
